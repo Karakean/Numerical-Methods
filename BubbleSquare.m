@@ -8,6 +8,7 @@ y = zeros(1, n_max);
 r = zeros(1, n_max);
 S = zeros(1, n_max);
 dv = zeros(1, n_max);
+dv_avg = zeros(1, n_max);
 draws = 0;
 n=1;
 while n <= n_max
@@ -42,6 +43,7 @@ while n <= n_max
         S(n) = S(n-1) + pi * cr^2;
     end
     dv(n) = draws;
+    dv_avg(n) = sum(dv)/n;
     draws = 0;
     fprintf(1, ' %s%5d%s%.3g\r ', 'n =',  n, ' S = ', S(n));
     pause(0.01);
@@ -54,7 +56,7 @@ xlabel("n");
 title("Total surface");
 
 figure;
-loglog(cumsum(dv));
+loglog(dv_avg);
 xlabel("n");
 title("Average draws number");
 
