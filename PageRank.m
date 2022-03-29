@@ -16,7 +16,7 @@ I = speye(N);
 b(1:N, 1) = (1-d)/N;
 
 %C
-M = sparse(I - d .* B * A);
+M = sparse(I - d * B * A);
 r = M \ b;
 
 %D
