@@ -19,7 +19,7 @@ semilogy(xdif);
 title("Differences of numbers of input parameters N with bisection method");
 xlabel("Iteration number");
 ylabel("Differences of number of parameters N");
-saveas(gcf, 'ex1_bisection_differences');
+saveas(gcf, 'ex1_bisection_differences.png');
 
 %exercise 1, secant method
 [xvect, xdif, fx, it_cnt] = secant(a,b,eps,@compute_time);
@@ -34,7 +34,7 @@ semilogy(xdif);
 title("Differences of numbers of input parameters N with secant method");
 xlabel("Iteration number");
 ylabel("Differences of number of parameters N");
-saveas(gcf, 'ex1_secant_differences');
+saveas(gcf, 'ex1_secant_differences.png');
 
 
 %exercise 2
@@ -51,13 +51,13 @@ plot(xvect);
 title("Approximation of the value of angular frequency (omega) with bisection method");
 xlabel("Itaration number");
 ylabel("Value of omega [rad/s]");
-saveas(gcf, 'ex2_bisection_value');
+saveas(gcf, 'ex2_bisection_value.png');
 figure();
 semilogy(xdif);
 title("Differences of numbers of values of angular frequency (omega) with bisection method");
 xlabel("Iteration number");
 ylabel("Differences of values of omega");
-saveas(gcf, 'ex2_bisection_differences');
+saveas(gcf, 'ex2_bisection_differences.png');
 
 %exercise 2, secant method
 [xvect, xdif, fx, it_cnt] = secant(a,b,eps,@compute_impedance);
@@ -66,13 +66,13 @@ plot(xvect);
 title("Approximation of the value of angular frequency (omega) with secant method");
 xlabel("Itaration number");
 ylabel("Value of omega [rad/s]");
-saveas(gcf, 'ex2_secant_value');
+saveas(gcf, 'ex2_secant_value.png');
 figure();
 semilogy(xdif);
 title("Differences of numbers of values of angular frequency (omega) with secant method");
 xlabel("Iteration number");
 ylabel("Differences of values of omega");
-saveas(gcf, 'ex2_secant_differences');
+saveas(gcf, 'ex2_secant_differences.png');
 
 
 %exercise 3
