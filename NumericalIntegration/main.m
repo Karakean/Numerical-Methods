@@ -1,0 +1,185 @@
+clc
+clear all
+
+%a
+n = 5;
+load P_ref
+N = 5:50:10^4;
+f = @probability_density;
+a = 0;
+b = n;
+f_min = 0;
+f_max = 0;
+
+for i = 1:n
+    if f(i) > f_max
+        f_max = f(i);
+    elseif f(i) < f_min
+        f_min = f(i);
+    end
+end
+
+lc = 1; %loop counter
+for k = N
+    delta_x = (b-a)/k;
+
+    sum_rec = 0;
+    sum_trap = 0;
+    sum_Simp = 0;
+    sum_MC = 0;
+    N1 = 0;
+    for i = 1:k
+        x_i = a+(i-1)*delta_x;
+        x_i1 = a+i*delta_x;
+
+        sum_rec = sum_rec + f((x_i+x_i1)/2)*delta_x;
+        sum_trap = sum_trap + ((f(x_i)+f(x_i1))/2)*delta_x;
+        sum_Simp = sum_Simp + (delta_x/6)*(f(x_i)+4*f((x_i1+x_i)/2)+f(x_i1));
+
+        x = rand()*(b-a)+a;
+        y = rand()*(f_max-f_min)+f_min;
+        if y>f(x)
+            N1 = N1 + 1;
+        end
+    end
+    sum_MC = (N1/k)*(b-a)*(f_max-f_min);
+
+    err_rec(lc) = abs(sum_rec - P_ref);
+    err_trap(lc) = abs(sum_trap - P_ref);
+    err_Simp(lc) = abs(sum_Simp - P_ref);
+    err_MC(lc) = abs(sum_MC - P_ref);
+
+    lc = lc + 1;
+end
+
+figure();
+loglog(N, err_rec);
+title("Error of numeral integration with rectangle rule");
+xlabel("Intervals' number");
+ylabel("Value of error");
+saveas(gcf, 'error_rectangle_rule.png')
+
+figure();
+loglog(N, err_trap);
+title("Error of numeral integration with trapezoidal rule");
+xlabel("Intervals' number");
+ylabel("Value of error");
+saveas(gcf, 'error_trapezoidal_rule.png')
+
+figure();
+loglog(N, err_Simp);
+title("Error of numeral integration with Simpson's rule");
+xlabel("Intervals' number");
+ylabel("Value of error");
+saveas(gcf, 'error_simpsons_rule.png')
+
+figure();
+loglog(N, err_MC);
+title("Error of numeral integration with Monte Carlo method");
+xlabel("Intervals' number");
+ylabel("Value of error");
+saveas(gcf, 'error_monte_carlo_method.png')
+
+N = 10^7;
+delta_x = (b-a)/N;
+
+sum_rec = 0;
+tic;
+for i = 1:N
+    x_i = a+(i-1)*delta_x;
+    x_i1 = a+i*delta_x;
+    sum_rec = sum_rec + f((x_i+x_i1)/2)*delta_x;
+end
+time_rec = toc;
+
+sum_trap = 0;
+tic;
+for i = 1:N
+    x_i = a+(i-1)*delta_x;
+    x_i1 = a+i*delta_x;
+    sum_trap = sum_trap + ((f(x_i)+f(x_i1))/2)*delta_x;
+end
+time_trap = toc;
+
+sum_Simp = 0;
+tic;
+for i = 1:N
+    x_i = a+(i-1)*delta_x;
+    x_i1 = a+i*delta_x;
+    sum_Simp = sum_Simp + (delta_x/6)*(f(x_i)+4*f((x_i1+x_i)/2)+f(x_i1));
+end
+time_Simp = toc;
+
+N1 = 0;
+tic;
+for i = 1:N
+    x = rand()*(b-a)+a;
+    y = rand()*(f_max-f_min)+f_min;
+    if y>f(x)
+        N1 = N1+1;
+    end
+end
+sum_MC = (N1/N)*(b-a)*(f_max-f_min);
+time_MC = toc;
+
+figure('Position', [10 10 900 600]);
+hold on
+x = ["Rectangle rule", "Trapezoidal rule", "Simpson's rule", "Monte Carlo method"];
+y = [time_rec; time_trap; time_Simp; time_MC];
+%set(gca, "xticklabel", x);
+set(gca,'xtick',[])
+for i = 1:4
+    b = bar(i, y(i));
+    switch i
+        case 1
+            set(b, 'FaceColor', 'r');
+
+        case 2
+            set(b, 'FaceColor', 'g');
+        case 3
+            set(b, 'FaceColor', 'b');
+        otherwise
+            set(b, 'FaceColor', 'y');
+    end
+end
+legend(x);
+%set(gca, "xticklabel", ["Rectangle rule", "Trapezoidal rule", "Simpson's rule", "Monte Carlo method"])
+title("Duration of numerical integration using different methods with N = 10^7");
+ylabel("Elapsed time [s]");
+saveas(gcf, 'duration.png');
+
+%b
+clc
+clear all
+load lake_data
+figure();
+surf(XX,YY,FF)
+shading interp
+axis equal
+
+f_min = -44;
+f_max = 0;
+N = 1e5;
+x_beg = 0;
+x_end = 100;
+y_beg = 0;
+y_end = 100;
+z_beg = -50;
+z_end = 0;
+
+x_diff = x_end - x_beg;
+y_diff = y_end - y_beg;
+z_diff = z_end - z_beg;
+
+N1 = 0;
+for i = 1:N
+    x = rand() * x_diff + x_beg;
+    y = rand() * y_diff + y_beg;
+    z = rand() * z_diff + z_beg;
+    d = depth(x, y);
+    if z > d
+        N1 = N1 + 1;
+    end
+end
+
+V = (N1 / N) * x_diff * y_diff * z_diff
