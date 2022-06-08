@@ -38,7 +38,7 @@ for k = N
 
         x = rand()*(b-a)+a;
         y = rand()*(f_max-f_min)+f_min;
-        if y>f(x)
+        if y<f(x)
             N1 = N1 + 1;
         end
     end
@@ -115,7 +115,7 @@ tic;
 for i = 1:N
     x = rand()*(b-a)+a;
     y = rand()*(f_max-f_min)+f_min;
-    if y>f(x)
+    if y<f(x)
         N1 = N1+1;
     end
 end
